@@ -6,6 +6,8 @@ export default function Home() {
   const [pdfData, setPdfData] = useState();
   const [embedData, setEmbedData] = useState();
   const [vector, setVector] = useState();
+  const [input, setInput] = useState("");
+  const [inputData, setInputData] = useState();
   const fetchPdf = async () => {
     const res = await axios.get("/api/pdf-parse");
     setPdfData(res.data.response);
@@ -29,14 +31,27 @@ export default function Home() {
       vector: data2,
     });
     console.log(res.data);
-    // setEmbed(res.data.response);
+  };
+
+  const compare = async () => {
+    const res = await axios.post("/api/compare", {
+      input,
+      vector: embedData,
+    });
+    console.log("vector chatnya", res.data.response);
+    return res;
   };
 
   console.log(vector);
 
-  useEffect(() => {
-    createTable();
-  }, []);
-
-  return <div>{embedData}</div>;
+  return (
+    <div>
+      {embedData}
+      <input type="text" onChange={(e) => setInput(e.target.value)} />
+      <button onClick={createTable}>Click</button>
+      <button onClick={compare} className="bg-red-200">
+        Clicknya
+      </button>
+    </div>
+  );
 }

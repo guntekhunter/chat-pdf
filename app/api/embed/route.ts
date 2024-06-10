@@ -12,7 +12,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const vectors = await hf.featureExtraction({
       model: "ggrn/e5-small-v2",
       inputs: `${pdf}`,
-      });
+    });
 
     return NextResponse.json({
       response: vectors,
