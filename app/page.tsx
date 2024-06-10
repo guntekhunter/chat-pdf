@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -13,7 +12,8 @@ export default function Home() {
     return res.data.response;
   };
   const fetchVectors = async () => {
-    const res = await axios.post("/api/embed", { pdf: pdfData });
+    const dataPdf = await fetchPdf();
+    const res = await axios.post("/api/embed", { pdf: dataPdf });
     console.log(res.data);
     setEmbedData(res.data.response);
     setVector(res.data);

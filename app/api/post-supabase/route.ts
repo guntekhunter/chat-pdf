@@ -11,13 +11,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const pdf = reqBody.pdf;
   const embedding = reqBody.vector;
   try {
-    await supabaseClient.from("documents").insert({
+    const supabaseResponse = await supabaseClient.from("documents").insert({
       content: `${pdf}`,
       embedding,
     });
 
     return NextResponse.json({
-      response: pdf,
+      response: supabaseResponse,
       vector: embedding,
     });
   } catch (error) {
