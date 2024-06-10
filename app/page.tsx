@@ -11,9 +11,9 @@ export default function Home() {
     setPdfData(res.data.response);
     return res.data.response;
   };
-  const fetchVectors = async () => {
+  const fetchVectors = async (pdfContent: any) => {
     const dataPdf = await fetchPdf();
-    const res = await axios.post("/api/embed", { pdf: dataPdf });
+    const res = await axios.post("/api/embed", { pdf: pdfContent });
     console.log(res.data);
     setEmbedData(res.data.response);
     setVector(res.data);
@@ -21,7 +21,7 @@ export default function Home() {
   };
   const createTable = async () => {
     const data1 = await fetchPdf();
-    const data2 = await fetchVectors();
+    const data2 = await fetchVectors(data1);
     console.log(data1);
     console.log(data2);
     const res = await axios.post("/api/post-supabase", {
