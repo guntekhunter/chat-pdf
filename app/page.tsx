@@ -1,13 +1,14 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export default function Home() {
   const [pdfData, setPdfData] = useState();
   const [embedData, setEmbedData] = useState();
   const [vector, setVector] = useState();
   const [input, setInput] = useState("");
-  const [inputData, setInputData] = useState();
+  const [file, setFile] = useState("");
+  const [inputData, setInputData] = useState<string | ArrayBuffer | null>(null);
   const fetchPdf = async () => {
     const res = await axios.get("/api/pdf-parse");
     setPdfData(res.data.response);
@@ -43,11 +44,27 @@ export default function Home() {
   };
 
   console.log(vector);
+  console.log(file)
+  
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            console.log('Selected file:', file.name);
+
+            // Read the file content
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                setInputData(event.target?.result as string | ArrayBuffer | null);
+            };
+            reader.readAsText(file); // You can use readAsDataURL, readAsArrayBuffer, etc. based on your requirement
+        }
+    };
 
   return (
     <div>
       {embedData}
       <input type="text" onChange={(e) => setInput(e.target.value)} />
+      <input type="file" onChange={handleFileChange}/>
       <button onClick={createTable}>Click</button>
       <button onClick={compare} className="bg-red-200">
         Clicknya
