@@ -7,7 +7,7 @@ export default function Home() {
   const [embedData, setEmbedData] = useState();
   const [vector, setVector] = useState();
   const [input, setInput] = useState("");
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState<File>();
   const [inputData, setInputData] = useState<string | ArrayBuffer | null>(null);
   const fetchPdf = async () => {
     const res = await axios.get("/api/pdf-parse");
@@ -44,27 +44,40 @@ export default function Home() {
   };
 
   console.log(vector);
-  console.log(file)
   
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
-            console.log('Selected file:', file.name);
-
+            // setFile(file)
+            console.log('Selected file:', file);
+            const formData = new FormData();
+            formData.append('file', file);
+            const res = await axios.post("/api/pdf-reader-upload",formData,{
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              }})
+              console.log(res)
             // Read the file content
             const reader = new FileReader();
             reader.onload = (event) => {
                 setInputData(event.target?.result as string | ArrayBuffer | null);
             };
             reader.readAsText(file); // You can use readAsDataURL, readAsArrayBuffer, etc. based on your requirement
-        }
-    };
+      }
+  };
+
+  const createParse = async () => {
+    console.log('Selected file:', file);
+    const res = await axios.post("/api/pdf-reader-upload", file)
+    console.log(res)
+  }
 
   return (
     <div>
       {embedData}
       <input type="text" onChange={(e) => setInput(e.target.value)} />
       <input type="file" onChange={handleFileChange}/>
+      <button onClick={createParse}>Click</button>
       <button onClick={createTable}>Click</button>
       <button onClick={compare} className="bg-red-200">
         Clicknya
