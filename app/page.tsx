@@ -56,13 +56,13 @@ export default function Home() {
               headers: {
                 'Content-Type': 'multipart/form-data',
               }})
-              console.log(res)
+            console.log(res)
             // Read the file content
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setInputData(event.target?.result as string | ArrayBuffer | null);
-            };
-            reader.readAsText(file); // You can use readAsDataURL, readAsArrayBuffer, etc. based on your requirement
+            // const reader = new FileReader();
+            // reader.onload = (event) => {
+            //     setInputData(event.target?.result as string | ArrayBuffer | null);
+            // };
+            // reader.readAsText(file); // You can use readAsDataURL, readAsArrayBuffer, etc. based on your requirement
       }
   };
 
