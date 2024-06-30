@@ -52,7 +52,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // ask ai using groq api
 
     const model = new ChatGroq({
-      apiKey: "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",
+      apiKey: process.env.GROQ_API_KEY,
     });
 
     const prompt = ChatPromptTemplate.fromMessages([
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const chain = prompt.pipe(model).pipe(outputParser);
 
     const responseStream = await chain.stream({
-      input: "Hello",
+      input: input,
     });
 
     let res = "";
