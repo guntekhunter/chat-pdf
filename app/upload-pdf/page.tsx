@@ -79,8 +79,8 @@ export default function page() {
   };
 
   return (
-    <div className="bg-[#F8F8F8] w-full flex justify-center py-[2rem] text-[#0B1215]">
-      <div className="w-[70%] bg-white rounded-md px-[3rem] py-[4rem] text-center flex justify-center">
+    <div className="bg-[#F8F8F8] w-full flex justify-center py-[2rem] text-[#0B1215] h-[100vh]">
+      <div className="w-[70%] bg-white rounded-md px-[3rem] py-[4rem] text-center flex justify-center align-center">
         <div className="w-[60%] space-y-[1rem]">
           <h1 className="font-bold text-[2rem]">Masukkan PDF Mu</h1>
           <div className="w-full h-[10rem] rounded-[1rem] border-dashed border-[2px] flex items-center justify-center relative">
@@ -95,7 +95,7 @@ export default function page() {
               </div>
             ) : (
               <div className="bg-black text-white p-2 rounded flex justify-center content-center">
-                Click or Drop Files Here
+                Drop Atau Klik Disini
               </div>
             )}
           </div>
