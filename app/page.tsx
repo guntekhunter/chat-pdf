@@ -1,6 +1,12 @@
+"use client"
+import { useRouter } from "next/navigation";
 import Button from "./component/Button";
 
 export default function Home() {
+  const route = useRouter()
+  const start = () => {
+    route.push("/upload-pdf")
+  }
   return (
     <div className="bg-[#F8F8F8] w-full flex justify-center py-[2rem] text-[#0B1215]">
       <div className="w-[70%] bg-white rounded-md px-[3rem] py-[4rem] text-center flex justify-center">
@@ -12,7 +18,7 @@ export default function Home() {
             dan masih banyak lagi.
           </p>
           <div className="w-full bg-gray-200 h-[17rem]"></div>
-          <Button>Coba Gratis</Button>
+          <Button onClick={start}>Coba Gratis</Button>
         </div>
       </div>
     </div>
