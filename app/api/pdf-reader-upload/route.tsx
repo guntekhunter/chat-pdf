@@ -7,7 +7,7 @@ import path from "path";
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.formData();
-    const file: File | null = data.get('file') as unknown as File;
+    const file: File | null = data.get("file") as unknown as File;
 
     if (!file) {
       return NextResponse.json({ success: false });
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const buffer = Buffer.from(bytes);
 
     // Create a directory if it doesn't exist
-    const tempDir = path.join(process.cwd(), 'tmp');
+    const tempDir = path.join(process.cwd(), "tmp");
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir);
     }
@@ -34,8 +34,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // Clean up the temp file
     fs.unlinkSync(tempFilePath);
 
+    // chunked the file
+    let pdfText = pdfData.text;
+    const chunkSize = 500 * 4;
+    const chunks = [];
+    for (let i = 0; i < pdfText.length; i += chunkSize) {
+      chunks.push(pdfText.slice(i, i + chunkSize));
+    }
+
     return NextResponse.json({
       response: pdfData.text,
+      chunks,
     });
   } catch (error: any) {
     console.error("Error parsing PDF:", error);

@@ -62,6 +62,7 @@ export default function page() {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(res);
       setPdfUpload(res.data.response);
     }
   };
