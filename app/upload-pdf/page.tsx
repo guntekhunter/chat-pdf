@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
-import { uploadPdf } from "../fetch/FetchData";
+import { uploadPdf, vectorizeChunks } from "../fetch/FetchData";
 import Button from "../component/Button";
 
 export default function page() {
@@ -62,7 +62,8 @@ export default function page() {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res);
+      const data = await vectorizeChunks(res.data.chunks);
+      console.log(data);
       setPdfUpload(res.data.response);
     }
   };

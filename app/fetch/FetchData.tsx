@@ -12,3 +12,11 @@ export const uploadPdf = async (file: File) => {
     console.log(error);
   }
 };
+export const vectorizeChunks = async (file: File) => {
+  try {
+    const res = await axios.post("/api/embed-chunks", file);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};

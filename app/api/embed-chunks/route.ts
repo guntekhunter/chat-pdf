@@ -6,15 +6,24 @@ import { HfInference } from "@huggingface/inference";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const reqBody = await req.json();
-  const pdf = reqBody.pdf;
+  const pdf = reqBody;
   try {
     const hf = new HfInference(process.env.HF_TOKEN);
-    const vectors = await hf.featureExtraction({
-      model: "ggrn/e5-small-v2",
-      inputs: `${pdf}`,
-    });
+    const data = [];
+    for (let i = 0; i < pdf.length; i++) {
+      const chunk = pdf[i];
+      const vectors = await hf.featureExtraction({
+        model: "ggrn/e5-small-v2",
+        inputs: `${chunk}`,
+      });
+
+      data.push({
+        text: chunk,
+        vectors,
+      });
+    }
     return NextResponse.json({
-      response: vectors,
+      response: data,
     });
   } catch (error) {
     console.log(error);
