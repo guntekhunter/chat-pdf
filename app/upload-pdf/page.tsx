@@ -3,16 +3,28 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { uploadPdf, vectorizeChunks } from "../fetch/FetchData";
 import Button from "../component/Button";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+interface PdfResponse {
+  response: Array<{
+    text: string;
+    vectors: number[];
+  }>;
+}
 
 export default function page() {
   const [pdfData, setPdfData] = useState();
-  const [pdfUpload, setPdfUpload] = useState();
+  const [pdfUpload, setPdfUpload] = useState<any>();
   const [fileName, setFileName] = useState("");
   const [embedData, setEmbedData] = useState();
   const [vector, setVector] = useState();
   const [input, setInput] = useState("");
   const [file, setFile] = useState<File>();
   const [inputData, setInputData] = useState<string | ArrayBuffer | null>(null);
+
+  const route = useRouter();
+
   const fetchPdf = async () => {
     const res = await axios.get("/api/pdf-parse");
     setPdfData(res.data.response);
@@ -47,8 +59,6 @@ export default function page() {
     return res;
   };
 
-  console.log(vector);
-
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -64,7 +74,7 @@ export default function page() {
       });
       const data = await vectorizeChunks(res.data.chunks);
       console.log(data);
-      setPdfUpload(res.data.response);
+      setPdfUpload(data);
     }
   };
 
@@ -80,6 +90,20 @@ export default function page() {
     console.log(res);
   };
 
+  const uploadToSupabase = async () => {
+    console.log(pdfUpload.data.response);
+    try {
+      for (let i = 0; i < pdfUpload.length; i++) {
+        const res = await axios.post("/api/post-supabase", {
+          pdf: pdfUpload.data.response[i].text,
+          vector: pdfUpload.data.response[i].vectors,
+        });
+        console.log("Response:", res.data);
+      }
+    } catch (error) {
+      console.error("Error uploading to Supabase:", error);
+    }
+  };
   return (
     <div className="bg-[#F8F8F8] w-full flex justify-center py-[2rem] text-[#0B1215] h-[100vh]">
       <div className="w-[70%] bg-white rounded-md px-[3rem] py-[4rem] text-center flex justify-center align-center">
@@ -101,7 +125,7 @@ export default function page() {
               </div>
             )}
           </div>
-          <Button>Mulai Chat</Button>
+          <Button onClick={uploadToSupabase}>Mulai Chat</Button>
         </div>
       </div>
     </div>
