@@ -93,13 +93,11 @@ export default function page() {
   const uploadToSupabase = async () => {
     console.log(pdfUpload.data.response);
     try {
-      for (let i = 0; i < pdfUpload.length; i++) {
-        const res = await axios.post("/api/post-supabase", {
-          pdf: pdfUpload.data.response[i].text,
-          vector: pdfUpload.data.response[i].vectors,
-        });
-        console.log("Response:", res.data);
-      }
+      const res = await axios.post("/api/post-supabase-chunk", {
+        pdf: pdfUpload,
+        // vector: ,
+      });
+      console.log("Response:", res.data);
     } catch (error) {
       console.error("Error uploading to Supabase:", error);
     }
