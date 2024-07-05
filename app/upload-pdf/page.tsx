@@ -9,6 +9,8 @@ import Link from "next/link";
 export default function page() {
   const [pdfUpload, setPdfUpload] = useState<any>();
   const [fileName, setFileName] = useState("");
+  const [input, setInput] = useState("");
+  const [pdfId, setPdfId] = useState();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -32,12 +34,20 @@ export default function page() {
     try {
       const res = await axios.post("/api/post-supabase-chunk", {
         pdf: pdfUpload,
-        // vector: ,
       });
-      console.log("Response:", res.data);
+      setPdfId(res?.data.id);
     } catch (error) {
       console.error("Error uploading to Supabase:", error);
     }
+  };
+
+  const compare = async () => {
+    const res = await axios.post("/api/compare", {
+      input,
+      pdfId,
+    });
+    console.log("vector chatnya", res.data.response);
+    return res;
   };
   return (
     <div className="bg-red-200 flex text-[.8rem] h-[100vh]">
@@ -78,9 +88,13 @@ export default function page() {
           <input
             type="text"
             className="w-full py-[.5rem] px-[.5rem] bg-[#F4F4F4] focus:outline-none focus:ring-0"
+            onChange={(e) => setInput(e.target.value)}
           />
           <div className="flex justify-center items-center h-full absolute right-[.5rem]">
-            <div className="bg-[#D9D9D9] w-[1.5rem] h-[1.5rem] rounded-full"></div>
+            <button
+              className="bg-[#D9D9D9] w-[1.5rem] h-[1.5rem] rounded-full"
+              onClick={compare}
+            ></button>
           </div>
         </div>
       </div>

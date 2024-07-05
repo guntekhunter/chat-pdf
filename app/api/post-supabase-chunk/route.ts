@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { v4 as uuidv4 } from 'uuid';
 
 const supabaseClient = createClient(
   "https://puuxxlofycwueeuxgycm.supabase.co",
@@ -9,9 +10,11 @@ const supabaseClient = createClient(
 export async function POST(req: NextRequest, res: NextResponse) {
   const reqBody = await req.json();
   const pdf = reqBody.pdf;
+  const requestId = uuidv4(); 
   
   try {
     const dataToInsert = pdf.data.response.map((item: any) => ({
+        pdf_id: requestId,
         content: item.text,
         embedding: item.vectors,
       }));
@@ -22,6 +25,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return NextResponse.json({
       response: "success",
       vector: pdf,
+      id: requestId
     });
   } catch (error) {
     console.error(error);

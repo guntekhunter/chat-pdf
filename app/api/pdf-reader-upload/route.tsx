@@ -4,6 +4,25 @@ import fs from "fs";
 import pdf from "pdf-parse";
 import path from "path";
 
+// Function to chunk text with overlap
+function chunkText(
+  text: string,
+  chunkSize = 2000,
+  overlapSize = 500
+): string[] {
+  const chunks = [];
+  let start = 0;
+
+  while (start < text.length) {
+    const end = Math.min(start + chunkSize, text.length);
+    const chunk = text.slice(start, end);
+    chunks.push(chunk);
+    start += chunkSize - overlapSize;
+  }
+
+  return chunks;
+}
+
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.formData();
@@ -34,13 +53,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // Clean up the temp file
     fs.unlinkSync(tempFilePath);
 
-    // chunked the file
+    // Chunk the PDF text
     let pdfText = pdfData.text;
-    const chunkSize = 500 * 4;
-    const chunks = [];
-    for (let i = 0; i < pdfText.length; i += chunkSize) {
-      chunks.push(pdfText.slice(i, i + chunkSize));
-    }
+    const chunks = chunkText(pdfText);
 
     return NextResponse.json({
       response: pdfData.text,

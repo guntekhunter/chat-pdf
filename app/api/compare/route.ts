@@ -15,7 +15,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const reqBody = await req.json();
     const input = reqBody.input;
-    const vector = reqBody.vector;
+    const pdfId = reqBody.pdf_id;
 
     const hf = new HfInference(process.env.HF_TOKEN);
     const inputVectors = await hf.featureExtraction({
@@ -29,20 +29,23 @@ export async function POST(req: NextRequest, res: NextResponse) {
       "match_documents",
       {
         query_embedding: inputVectors,
-        match_threshold: 0.73,
+        match_threshold: 0.80,
         match_count: 10,
       }
     );
 
     //declare the varible
     let contentText = "";
+    let id = ""
 
     //looping trought the database data for the same vectors comparing data
     for (let i = 0; i < documents.length; i++) {
       const document = documents[i];
-      const content = document.content;
-
-      contentText = `${content.trim()}---\n`;
+      // if(pdfId === document.pdf_id){
+        const content = document.content;
+        id = document.pdf
+        contentText = `${content.trim()}---\n`;
+      // }
     }
 
     //create prompt
