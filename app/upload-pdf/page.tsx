@@ -5,12 +5,14 @@ import { uploadPdf, vectorizeChunks } from "../fetch/FetchData";
 import Button from "../component/Button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import fetchData from "../api/function/groq/Groq";
 
 export default function page() {
   const [pdfUpload, setPdfUpload] = useState<any>();
   const [fileName, setFileName] = useState("");
   const [input, setInput] = useState("");
   const [pdfId, setPdfId] = useState();
+  const [answer, setAnswer] = useState("");
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -46,7 +48,24 @@ export default function page() {
       input,
       pdfId,
     });
-    console.log("vector chatnya", res.data.response);
+
+    const handleChunk = (chunk: string) => {
+      console.log("Received chunk:", chunk);
+      setAnswer((prev) => prev + chunk);
+      // Handle each chunk of data here
+    };
+
+    const handleError = (error: any) => {
+      console.error("Error:", error);
+      // Handle errors here
+    };
+
+    console.log("vector chatnya", res.data.datanya);
+    fetchData(input, handleChunk, handleError, res.data.datanya).then(
+      (response: any) => {
+        console.log("Fetch data complete:", response);
+      }
+    );
     return res;
   };
   return (
@@ -83,7 +102,7 @@ export default function page() {
       </div>
       <div className="w-[40%] bg-yellow-200">dua</div>
       <div className="w-[40%] bg-white py-[2rem] flex flex-col ">
-        <div className="flex-grow"></div>
+        <div className="flex-grow">{answer}</div>
         <div className="bg-[#F4F4F4] px-[1rem] h-[2.5rem] flex rounded-full mx-[1.5rem] relative ">
           <input
             type="text"

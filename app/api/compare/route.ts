@@ -48,35 +48,35 @@ export async function POST(req: NextRequest, res: NextResponse) {
       // }
     }
 
-    //create prompt
-    const promptTemplate = `kamu adalah asisten ai yang mengetahui segalanya
+    // //create prompt
+    // const promptTemplate = `kamu adalah asisten ai yang mengetahui segalanya
     
-    Context section: ${contentText} pertanyaan: """${input}"""`;
-    // ask ai using groq api
+    // Context section: ${contentText} pertanyaan: """${input}"""`;
+    // // ask ai using groq api
 
-    const model = new ChatGroq({
-      apiKey: process.env.GROQ_API_KEY,
-    });
+    // const model = new ChatGroq({
+    //   apiKey: process.env.GROQ_API_KEY,
+    // });
 
-    const prompt = ChatPromptTemplate.fromMessages([
-      ["system", "You are a helpful assistant"],
-      ["human", promptTemplate],
-    ]);
+    // const prompt = ChatPromptTemplate.fromMessages([
+    //   ["system", "You are a helpful assistant"],
+    //   ["human", promptTemplate],
+    // ]);
 
-    const outputParser = new StringOutputParser();
-    const chain = prompt.pipe(model).pipe(outputParser);
+    // const outputParser = new StringOutputParser();
+    // const chain = prompt.pipe(model).pipe(outputParser);
 
-    const responseStream = await chain.stream({
-      input: input,
-    });
+    // const responseStream = await chain.stream({
+    //   input: input,
+    // });
 
-    let res = "";
-    for await (const item of responseStream) {
-      res += item;
-    }
+    // let res = "";
+    // for await (const item of responseStream) {
+    //   res += item;
+    // }
 
     return NextResponse.json({
-      response: res,
+      // response: res,
       datanya: contentText,
     });
   } catch (error) {
