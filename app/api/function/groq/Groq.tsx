@@ -20,7 +20,7 @@ const fetchData = (
       const prompt = ChatPromptTemplate.fromMessages([
         [
           "system",
-          "Kamu adalah asisten yang bisa menjawab dalam bahasa indonesia semua pertanyaan berdasarkan context yang diberikan",
+          "Kamu adalah asisten yang bisa menjawab dalam bahasa indonesia semua pertanyaan berdasarkan context yang diberikan. Buat semua jawabanmu dalam bentuk markup languange",
         ],
         ["human", promptTemplate],
       ]);
