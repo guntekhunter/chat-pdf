@@ -11,8 +11,8 @@ const fetchData = (
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
-      //create prompt
-      const promptTemplate = `Kamu adalah asisten AI yang akan menjawab pertanyaan berdasarkan konteks yang diberikan. Jika kamu kurang mengerti dengan konteksnya, minta informasi yang lebih jelas. Buat semua responmu dalam bentuk markup language.\n\nContext section: ${context}\n\nPertanyaan: "${inputText}"`;
+      // Create prompt
+      const promptTemplate = `Kamu adalah asisten AI yang akan menjawab pertanyaan berdasarkan konteks yang diberikan. Jika kamu kurang mengerti dengan konteksnya, minta informasi yang lebih jelas.\n\nContext section: ${context}\n\nPertanyaan: "${inputText}"`;
       const model = new ChatGroq({
         apiKey: "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",
       });
@@ -20,7 +20,7 @@ const fetchData = (
       const prompt = ChatPromptTemplate.fromMessages([
         [
           "system",
-          "Kamu adalah asisten yang bisa menjawab semua pertanyaan berdasarkan context yang diberikan. Buat semua responsemu dalam bahasa Indonesia",
+          "Kamu adalah asisten yang bisa menjawab dalam bahasa indonesia semua pertanyaan berdasarkan context yang diberikan",
         ],
         ["human", promptTemplate],
       ]);

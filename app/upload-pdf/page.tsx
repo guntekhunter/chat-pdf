@@ -81,11 +81,11 @@ export default function Page() {
     const maxLength = Math.max(question.length, answers.length);
 
     for (let i = 0; i < maxLength; i++) {
-      if (i < answers.length) {
-        combinedArray.push({ chat: answers[i], type: "answer" });
-      }
       if (i < question.length) {
         combinedArray.push({ chat: question[i], type: "question" });
+      }
+      if (i < answers.length) {
+        combinedArray.push({ chat: answers[i], type: "answer" });
       }
     }
 
@@ -128,37 +128,39 @@ export default function Page() {
       </div>
       <div className="w-[40%] bg-yellow-200">dua</div>
       <div className="w-[40%] bg-white py-[2rem] flex flex-col ">
-        <div className="flex-grow px-[1rem] overflow-y-scroll flex-col-reverse scrollbar-thin scrollbar-track-[#F5F8FA] scrollbar-thumb-black py-[1rem] dark:scrollbar-track-[#0F0F0F] dark:border-[#0F0F0F]">
+        <div className="flex-grow px-[1rem] overflow-y-scroll scrollbar-thin scrollbar-track-[#F5F8FA] scrollbar-thumb-black py-[1rem] dark:scrollbar-track-[#0F0F0F] dark:border-[#0F0F0F]">
           <div className="leading-3" />
-          <div className="">
+          <div className="flex-col-reverse flex">
             {arrayChat.map((item, key) => (
               <div
                 key={key}
                 className={`${
                   item.chat.type === "question"
-                    ? "p-[1.5rem] flex items-end justify-end w-full bg-gray-200"
+                    ? "p-[1.5rem] flex items-end justify-end w-full"
                     : ""
                 }`}
               >
                 <div
                   className={`${
                     item.chat.type === "question"
-                      ? "bg-yellow-200 w-full flex items-end justify-end"
+                      ? "w-full flex items-end justify-end"
                       : ""
                   }`}
                 >
                   <div
                     className={`${
                       item.chat.type === "question"
-                        ? "bg-red-200 flex items-end justify-end p-[1rem]"
-                        : "bg-green-200"
+                        ? "flex items-end justify-end p-[1rem] bg-[#ECECEC] rounded-md"
+                        : "p-[1rem]"
                     }`}
                   >
                     {item.chat.type === "answer" ? (
                       <p>{item.chat.chat}</p>
                     ) : (
                       // <div className="whitespace-pre-wrap">
-                      <Markdown>{item.chat.chat}</Markdown>
+                      <div className="whitespace-pre-wrap">
+                        {item.chat.chat}
+                      </div>
                       // </div>
                     )}
                   </div>
