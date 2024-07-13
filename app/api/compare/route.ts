@@ -29,28 +29,28 @@ export async function POST(req: NextRequest, res: NextResponse) {
       "match_documents",
       {
         query_embedding: inputVectors,
-        match_threshold: 0.80,
+        match_threshold: 0.8,
         match_count: 10,
       }
     );
 
     //declare the varible
     let contentText = "";
-    let id = ""
+    let id = "";
 
     //looping trought the database data for the same vectors comparing data
     for (let i = 0; i < documents.length; i++) {
       const document = documents[i];
       // if(pdfId === document.pdf_id){
-        const content = document.content;
-        id = document.pdf
-        contentText = `${content.trim()}---\n`;
+      const content = document.content;
+      id = document.pdf;
+      contentText = `${content.trim()}---\n`;
       // }
     }
 
     //create prompt
     const promptTemplate = `kamu adalah asisten ai yang mengetahui segalanya
-    
+
     Context section: ${contentText} pertanyaan: """${input}"""`;
     // ask ai using groq api
 

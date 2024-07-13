@@ -5,14 +5,18 @@ import { uploadPdf, vectorizeChunks } from "../fetch/FetchData";
 import Button from "../component/Button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import fetchData from "../api/function/groq/route";
+import fetchData from "../api/function/groq/Groq";
+import Markdown from "markdown-to-jsx";
 
-export default function page() {
-  const [pdfUpload, setPdfUpload] = useState<any>();
+export default function Page() {
+  const [pdfUpload, setPdfUpload] = useState<any>(null);
   const [fileName, setFileName] = useState("");
   const [input, setInput] = useState("");
-  const [pdfId, setPdfId] = useState();
+  const [pdfId, setPdfId] = useState(null);
   const [answer, setAnswer] = useState("");
+  const [answers, setAnswers] = useState<{ chat: any; type: string }[]>([]);
+  const [arrayChat, setArrayChat] = useState<{ chat: any; type: string }[]>([]);
+  const [question, setQuestion] = useState<{ chat: any; type: string }[]>([]);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -49,27 +53,47 @@ export default function page() {
       pdfId,
     });
 
+    let theAnswer = "";
     const handleChunk = (chunk: string) => {
       console.log("Received chunk:", chunk);
-      setAnswer((prev) => prev + chunk);
-      // Handle each chunk of data here
+      theAnswer += chunk;
+      // setAnswer(theAnswer); // Update the state here
     };
 
     const handleError = (error: any) => {
       console.error("Error:", error);
-      // Handle errors here
     };
 
     console.log("vector chatnya", res.data.datanya);
-
-    const context = res.data.data;
-
-    fetchData(input, handleChunk, handleError, context).then(
+    await fetchData(input, handleChunk, handleError, res.data.datanya).then(
       (response: any) => {
         console.log("Fetch data complete:", response);
+        setAnswers((prev) => [...prev, { chat: response, type: "answer" }]);
       }
     );
+    setQuestion((prev) => [...prev, { chat: input, type: "question" }]);
+    setInput("");
+    return res;
   };
+
+  useEffect(() => {
+    const combinedArray = [];
+    const maxLength = Math.max(question.length, answers.length);
+
+    for (let i = 0; i < maxLength; i++) {
+      if (i < question.length) {
+        combinedArray.push({ chat: question[i], type: "question" });
+      }
+      if (i < answers.length) {
+        combinedArray.push({ chat: answers[i], type: "answer" });
+      }
+    }
+
+    setArrayChat(combinedArray.reverse());
+  }, [question, answers]);
+
+  console.log(arrayChat);
+
   return (
     <div className="bg-red-200 flex text-[.8rem] h-[100vh]">
       <div className="w-[20%] bg-[#F8F8F8] p-[1rem] space-y-[1rem]">
@@ -104,11 +128,55 @@ export default function page() {
       </div>
       <div className="w-[40%] bg-yellow-200">dua</div>
       <div className="w-[40%] bg-white py-[2rem] flex flex-col ">
-        <div className="flex-grow">{answer}</div>
+        <div className="flex-grow px-[1rem] overflow-y-scroll scrollbar-thin scrollbar-track-[#F5F8FA] scrollbar-thumb-black py-[1rem] dark:scrollbar-track-[#0F0F0F] dark:border-[#0F0F0F]">
+          <div className="leading-3" />
+          <div className="flex-col-reverse flex">
+            {arrayChat.map((item, key) => (
+              <div
+                key={key}
+                className={`${
+                  item.chat.type === "question"
+                    ? "p-[1.5rem] flex items-end justify-end w-full"
+                    : ""
+                }`}
+              >
+                <div
+                  className={`${
+                    item.chat.type === "question"
+                      ? "w-full flex items-end justify-end"
+                      : ""
+                  }`}
+                >
+                  <div
+                    className={`${
+                      item.chat.type === "question"
+                        ? "flex items-end justify-end p-[1rem] bg-[#ECECEC] rounded-md"
+                        : "p-[1rem]"
+                    }`}
+                  >
+                    {item.chat.type !== "answer" ? (
+                      <p>{item.chat.chat}</p>
+                    ) : (
+                      // <div className="whitespace-pre-wrap">
+                      <article className="prose prose-li:text-[.5rem] prose-h1:center prose-p:text-[.5rem] prose lg:prose-xl max-w-5xl mx-auto prose-headings:text-[.5rem] prose-tr:text-[.5rem] prose-th:bg-blue-200 prose-th:p-[.5rem] prose-td:border-[1px] prose-td:p-[.5rem] prose-h1:hidden">
+                        {item.chat.chat}
+                      </article>
+                      // <div className="whitespace-pre-wrap">
+                      //   {item.chat.chat}
+                      // </div>
+                      // </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="bg-[#F4F4F4] px-[1rem] h-[2.5rem] flex rounded-full mx-[1.5rem] relative ">
           <input
             type="text"
             className="w-full py-[.5rem] px-[.5rem] bg-[#F4F4F4] focus:outline-none focus:ring-0"
+            value={input}
             onChange={(e) => setInput(e.target.value)}
           />
           <div className="flex justify-center items-center h-full absolute right-[.5rem]">
