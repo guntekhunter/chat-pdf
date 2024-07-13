@@ -5,7 +5,7 @@ import { uploadPdf, vectorizeChunks } from "../fetch/FetchData";
 import Button from "../component/Button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import fetchData from "../api/function/groq/Groq";
+import fetchData from "../api/function/groq/route";
 
 export default function page() {
   const [pdfUpload, setPdfUpload] = useState<any>();
@@ -61,12 +61,14 @@ export default function page() {
     };
 
     console.log("vector chatnya", res.data.datanya);
-    fetchData(input, handleChunk, handleError, res.data.datanya).then(
+
+    const context = res.data.data;
+
+    fetchData(input, handleChunk, handleError, context).then(
       (response: any) => {
         console.log("Fetch data complete:", response);
       }
     );
-    return res;
   };
   return (
     <div className="bg-red-200 flex text-[.8rem] h-[100vh]">

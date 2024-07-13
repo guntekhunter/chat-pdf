@@ -12,7 +12,7 @@ const fetchData = (
   return new Promise(async (resolve, reject) => {
     try {
       //create prompt
-      const promptTemplate = `kamu adalah asisten ai yang mengetahui segalanya
+      const promptTemplate = `kamu adalah asisten ai yang akan menjawab pertanyaan user berdasarkan kontextyang disediakan
     
     Context section: ${context} pertanyaan: """${inputText}"""`;
       // ask ai using groq api
@@ -22,7 +22,7 @@ const fetchData = (
       });
 
       const prompt = ChatPromptTemplate.fromMessages([
-        ["system", "You are a helpful assistant"],
+        ["system", "kamu adalah asisten yang bisa menjawab pertanyaan user berdasarkan conteks yang disdiakan"],
         ["human", promptTemplate],
       ]);
 
