@@ -30,7 +30,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       {
         query_embedding: inputVectors,
         match_threshold: 0.8,
-        match_count: 10,
+        match_count: 5,
       }
     );
 

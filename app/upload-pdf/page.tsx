@@ -157,14 +157,9 @@ export default function Page() {
                     {item.chat.type !== "answer" ? (
                       <p>{item.chat.chat}</p>
                     ) : (
-                      // <div className="whitespace-pre-wrap">
-                      <article className="prose prose-li:text-[.5rem] prose-h1:center prose-p:text-[.5rem] prose lg:prose-xl max-w-5xl mx-auto prose-headings:text-[.5rem] prose-tr:text-[.5rem] prose-th:bg-blue-200 prose-th:p-[.5rem] prose-td:border-[1px] prose-td:p-[.5rem] prose-h1:hidden">
-                        {item.chat.chat}
+                      <article className="prose prose-h2:text-[3rem] prose-h1:font-bold">
+                        <Markdown>{item.chat.chat}</Markdown>
                       </article>
-                      // <div className="whitespace-pre-wrap">
-                      //   {item.chat.chat}
-                      // </div>
-                      // </div>
                     )}
                   </div>
                 </div>
