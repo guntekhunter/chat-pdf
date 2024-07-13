@@ -157,7 +157,7 @@ export default function Page() {
                     {item.chat.type !== "answer" ? (
                       <p>{item.chat.chat}</p>
                     ) : (
-                      <article className="prose prose-h2:text-[3rem] prose-h1:font-bold">
+                      <article className="prose prose-h1:font-bold prose-p:text-[.8rem] prose-li:text-[.8rem] prose-h1:text-[1rem]">
                         <Markdown>{item.chat.chat}</Markdown>
                       </article>
                     )}
