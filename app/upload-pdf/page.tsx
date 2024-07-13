@@ -5,7 +5,7 @@ import { uploadPdf, vectorizeChunks } from "../fetch/FetchData";
 import Button from "../component/Button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import fetchData from "../api/function/groq/Groq";
+import fetchData from "../api/function/groq/route";
 import Markdown from "markdown-to-jsx";
 
 export default function Page() {
