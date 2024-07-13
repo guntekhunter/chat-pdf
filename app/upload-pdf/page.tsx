@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import fetchData from "../api/function/groq/route";
 import Markdown from "markdown-to-jsx";
+import { Viewer, Worker } from "@react-pdf-viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 export default function Page() {
   const [pdfUpload, setPdfUpload] = useState<any>(null);
@@ -17,12 +21,13 @@ export default function Page() {
   const [answers, setAnswers] = useState<{ chat: any; type: string }[]>([]);
   const [arrayChat, setArrayChat] = useState<{ chat: any; type: string }[]>([]);
   const [question, setQuestion] = useState<{ chat: any; type: string }[]>([]);
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const [pdfToShow, setPdfToShow] = useState(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setFileName(file.name);
-      console.log("Selected file:", file);
       const formData = new FormData();
       formData.append("file", file);
       const res = await axios.post("/api/pdf-reader-upload", formData, {
@@ -32,6 +37,13 @@ export default function Page() {
       });
       const data = await vectorizeChunks(res.data.chunks);
       setPdfUpload(data);
+
+      // get the url pdf file
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e: any) => {
+        setPdfUrl(e.target?.result);
+      };
     }
   };
 
@@ -92,10 +104,10 @@ export default function Page() {
     setArrayChat(combinedArray.reverse());
   }, [question, answers]);
 
-  console.log(arrayChat);
+  const newplugin = defaultLayoutPlugin();
 
   return (
-    <div className="bg-red-200 flex text-[.8rem] h-[100vh]">
+    <div className="flex text-[.8rem] h-[100vh]">
       <div className="w-[20%] bg-[#F8F8F8] p-[1rem] space-y-[1rem]">
         <div className="px-[1rem]">
           <p className="text-[#949494]">Fitur Lainnya</p>
@@ -126,7 +138,19 @@ export default function Page() {
           Mulai Chat
         </Button>
       </div>
-      <div className="w-[40%] bg-yellow-200">dua</div>
+      <div className="w-[40%]">
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+          {pdfUrl ? (
+            <>
+              <Viewer fileUrl={pdfUrl} plugins={[newplugin]} />
+            </>
+          ) : (
+            <div className="w-full h-[100vh] flex items-center justify-center border-r-[.1rem]">
+              No PDF
+            </div>
+          )}
+        </Worker>
+      </div>
       <div className="w-[40%] bg-white py-[2rem] flex flex-col ">
         <div className="flex-grow px-[1rem] overflow-y-scroll scrollbar-thin scrollbar-track-[#F5F8FA] scrollbar-thumb-black py-[1rem] dark:scrollbar-track-[#0F0F0F] dark:border-[#0F0F0F]">
           <div className="leading-3" />
