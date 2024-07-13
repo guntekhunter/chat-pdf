@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import fetchData from "../api/function/groq/Groq";
 import Markdown from "markdown-to-jsx";
+import { Viewer, Worker } from "@react-pdf-Viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 export default function Page() {
   const [pdfUpload, setPdfUpload] = useState<any>(null);
@@ -14,6 +18,7 @@ export default function Page() {
   const [input, setInput] = useState("");
   const [pdfId, setPdfId] = useState(null);
   const [answer, setAnswer] = useState("");
+  const [pdfFile, setPdfFile] = useState("");
   const [answers, setAnswers] = useState<{ chat: any; type: string }[]>([]);
   const [arrayChat, setArrayChat] = useState<{ chat: any; type: string }[]>([]);
   const [question, setQuestion] = useState<{ chat: any; type: string }[]>([]);
@@ -23,6 +28,12 @@ export default function Page() {
       const file = e.target.files[0];
       setFileName(file.name);
       console.log("Selected file:", file);
+      let reader = new FileReader();
+      console.log(reader);
+      reader.readAsDataURL(file);
+      reader.onload = (e: any) => {
+        setPdfFile(e.target?.result);
+      };
       const formData = new FormData();
       formData.append("file", file);
       const res = await axios.post("/api/pdf-reader-upload", formData, {
@@ -92,7 +103,7 @@ export default function Page() {
     setArrayChat(combinedArray.reverse());
   }, [question, answers]);
 
-  console.log(arrayChat);
+  const newplugin = defaultLayoutPlugin();
 
   return (
     <div className="bg-red-200 flex text-[.8rem] h-[100vh]">
@@ -126,7 +137,16 @@ export default function Page() {
           Mulai Chat
         </Button>
       </div>
-      <div className="w-[40%] bg-yellow-200">dua</div>
+      <div className="w-[40%] bg-yellow-200">
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.15.139/build/pdf.worker.min.js">
+          {pdfFile && (
+            <>
+              <Viewer fileUrl={pdfFile} plugins={[newplugin]} />
+            </>
+          )}
+          {!pdfFile && <>No PDF</>}
+        </Worker>
+      </div>
       <div className="w-[40%] bg-white py-[2rem] flex flex-col ">
         <div className="flex-grow px-[1rem] overflow-y-scroll scrollbar-thin scrollbar-track-[#F5F8FA] scrollbar-thumb-black py-[1rem] dark:scrollbar-track-[#0F0F0F] dark:border-[#0F0F0F]">
           <div className="leading-3" />
