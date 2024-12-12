@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseClient = createClient(
-  "https://puuxxlofycwueeuxgycm.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1dXh4bG9meWN3dWVldXhneWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc4MjAwNDYsImV4cCI6MjAzMzM5NjA0Nn0.PfuPRmukJ2FrneHKSxaqXy693WtnptE2rv9U6qNOkZw"
+  "https://ijevkvvdhwlnycjqbsln.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqZXZrdnZkaHdsbnljanFic2xuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2MjAzMzAsImV4cCI6MjA0OTE5NjMzMH0.fVlQ_uN_Q34VkiKJ1ge34w2GuDBfFMGczJ6ZarEJdUU"
 );
 
 export async function POST(req: NextRequest, res: NextResponse) {

@@ -158,25 +158,22 @@ export default function Page() {
             {arrayChat.map((item, key) => (
               <div
                 key={key}
-                className={`${
-                  item.chat.type === "question"
-                    ? "p-[1.5rem] flex items-end justify-end w-full"
-                    : ""
-                }`}
+                className={`${item.chat.type === "question"
+                  ? "p-[1.5rem] flex items-end justify-end w-full"
+                  : ""
+                  }`}
               >
                 <div
-                  className={`${
-                    item.chat.type === "question"
-                      ? "w-full flex items-end justify-end"
-                      : ""
-                  }`}
+                  className={`${item.chat.type === "question"
+                    ? "w-full flex items-end justify-end"
+                    : ""
+                    }`}
                 >
                   <div
-                    className={`${
-                      item.chat.type === "question"
-                        ? "flex items-end justify-end p-[1rem] bg-[#ECECEC] rounded-md"
-                        : "p-[1rem]"
-                    }`}
+                    className={`${item.chat.type === "question"
+                      ? "flex items-end justify-end p-[1rem] bg-[#ECECEC] rounded-md"
+                      : "p-[1rem]"
+                      }`}
                   >
                     {item.chat.type !== "answer" ? (
                       <p>{item.chat.chat}</p>
